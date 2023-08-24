@@ -1,15 +1,16 @@
 import React from 'react'
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
     const initialState = {
         form: {
-            email: "",
+            username: "",
             password: "",
         }, errors: {
             hasError: false,
-            email: "",
+            username: "",
             password: "",
             customError: "",
         }
@@ -29,9 +30,9 @@ const Login = () => {
         setLoader(true);
         setFormErrors(initialState.errors);
         let anyError = false;
-        if (formData.email === "") {
+        if (formData.username === "") {
             setFormErrors((prev) => {
-                return { ...prev, hasError: true, email: "   Email is required" };
+                return { ...prev, hasError: true, username: "   username is required" };
             });
             anyError = true;
         }
@@ -43,7 +44,22 @@ const Login = () => {
         }
         if (!anyError) {
             console.log(formData);
-            alert("Successfully signed up")
+            axios.get(`http://localhost:8080/login?username=${formData.username}&password=${formData.password}`)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.success === "true") {
+                        localStorage.setItem("token", res.data.authenticationtoken);
+                        alert("Successfully logged in")
+                    } else {
+                        setFormErrors((prev) => {
+                            return { ...prev, hasError: true, customError: "Invalid username or password" };
+                        });
+                        alert("Invalid username or password")
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    alert("Something went wrong")
+                })
         }
         setLoader(false);
     }
@@ -63,14 +79,14 @@ const Login = () => {
 
                                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                                 <Form.Label className="text-center">
-                                                    Email address
+                                                    Username
                                                 </Form.Label>
-                                                {formErrors.hasError && formErrors.email !== "" && (
+                                                {formErrors.hasError && formErrors.username !== "" && (
                                                     <Form.Text className="text-danger">
-                                                        {formErrors.email}
+                                                        {formErrors.username}
                                                     </Form.Text>
                                                 )}
-                                                <Form.Control type="email" placeholder="Enter email" name="email" value={formData.email} onChange={handleInputChange} />
+                                                <Form.Control type="text" placeholder="Enter username" name="username" value={formData.username} onChange={handleInputChange} />
                                             </Form.Group>
 
                                             <Form.Group
@@ -92,7 +108,13 @@ const Login = () => {
                                             >
                                             </Form.Group>
                                             <div className="d-grid">
-                                                {loader && <>loading...</> }
+                                                {loader && <div>loading...</div>}
+                                                {formErrors.hasError && formErrors.customError !== "" && (
+                                                    <Form.Text className="text-danger">
+                                                        {formErrors.customError}
+                                                    </Form.Text>
+                                                )}
+
                                                 <Button variant="primary" onClick={handleSubmit} >
                                                     Log in
                                                 </Button>

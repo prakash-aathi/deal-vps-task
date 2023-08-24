@@ -1,21 +1,26 @@
 import React from 'react'
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Signup = () => {
 
     const initialState = {
         form: {
-            name: "",
+            accountId: "",
             email: "",
+            altEmail: "",
+            firstName: "",
+            lastName: "",
+            commonName: "",
+            contactNumber: "",
             password: "",
             confirmPassword: "",
+            roles: ["ROLE_USER"],
+            groups: ["RAD"]
         }, errors: {
             hasError: false,
-            name: "",
-            email: "",
-            password: "",
             confirmPassword: "",
             customError: "",
         }
@@ -24,6 +29,8 @@ const Signup = () => {
     const [formData, setFormData] = React.useState(initialState.form);
     const [formErrors, setFormErrors] = React.useState(initialState.errors);
     const [loader, setLoader] = React.useState(false);
+    
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -35,39 +42,33 @@ const Signup = () => {
         setLoader(true);
         setFormErrors(initialState.errors);
         let anyError = false;
-        if (formData.name === "") {
-            setFormErrors((prev) => {
-                return { ...prev, hasError: true, name: "   Name is required" };
-            });
-            anyError = true;
-        }
-        if (formData.email === "") {
-            setFormErrors((prev) => {
-                return { ...prev, hasError: true, email: "   Email is required" };
-            });
-            anyError = true;
-        }
-        if (formData.password === "") {
-            setFormErrors((prev) => {
-                return { ...prev, hasError: true, password: "   Password is required" };
-            });
-            anyError = true;
-        }
-        if (formData.confirmPassword === "") {
-            setFormErrors((prev) => {
-                return { ...prev, hasError: true, confirmPassword: "   Confirm Password is required" };
-            });
-            anyError = true;
-        }
         if (formData.password !== formData.confirmPassword) {
             setFormErrors((prev) => {
                 return { ...prev, hasError: true, confirmPassword: "   Password and Confirm Password must be same" };
             });
             anyError = true;
         }
+        setFormData((prev) => {
+            return { ...prev, commonName: formData.firstName + " " + formData.lastName };
+        });
         if (!anyError) {
             console.log(formData);
-            alert("Successfully signed up")
+
+            axios.post("http://localhost:8080/register", formData)
+                .then((res) => {
+                    let data = res.data;
+                    if (data.status === "error") {
+                        setFormErrors((prev) => {
+                            return { ...prev, hasError: true, customError: data.message };
+                        });
+                    } else {
+                        alert("Successfully signed up")
+                        navigate("/login")
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                })
+
         }
         setLoader(false);
     }
@@ -86,26 +87,48 @@ const Signup = () => {
                                         <Form>
                                             <Form.Group className="mb-3" controlId="Name">
                                                 <Form.Label className="text-center">
-                                                    Name
+                                                    User Name
                                                 </Form.Label>
-                                                {formErrors.hasError && formErrors.name !== "" && (
-                                                    <Form.Text className="text-danger">
-                                                        {formErrors.name}
-                                                    </Form.Text>
-                                                )}
-                                                <Form.Control type="text" placeholder="Enter Name" name="name" value={formData.name} onChange={handleInputChange} />
+
+                                                <Form.Control type="text" required placeholder="Enter Unique user name" name="accountId" value={formData.accountId} onChange={handleInputChange} />
                                             </Form.Group>
 
                                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                                 <Form.Label className="text-center">
                                                     Email address
                                                 </Form.Label>
-                                                {formErrors.hasError && formErrors.email !== "" && (
-                                                    <Form.Text className="text-danger">
-                                                        {formErrors.email}
-                                                    </Form.Text>
-                                                )}
-                                                <Form.Control type="email" placeholder="Enter email" name="email" value={formData.email} onChange={handleInputChange} />
+                                                <Form.Control type="email" required placeholder="Enter email" name="email" value={formData.email} onChange={handleInputChange} />
+                                            </Form.Group>
+
+                                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                                <Form.Label className="text-center">
+                                                    Alternate Email address
+                                                </Form.Label>
+                                                <Form.Control type="email" placeholder="Enter Alternate Email" name="altEmail" value={formData.altEmail} onChange={handleInputChange} />
+                                            </Form.Group>
+
+                                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                                <Form.Label className="text-center">
+                                                    First Name
+                                                </Form.Label>
+
+                                                <Form.Control type="text" placeholder="Enter First name" name="firstName" value={formData.firstName} onChange={handleInputChange} />
+                                            </Form.Group>
+
+                                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                                <Form.Label className="text-center">
+                                                    Last Name
+                                                </Form.Label>
+
+                                                <Form.Control type="text" placeholder="Enter Last name" name="lastName" value={formData.lastName} onChange={handleInputChange} />
+                                            </Form.Group>
+
+                                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                                <Form.Label className="text-center">
+                                                    Contact Number
+                                                </Form.Label>
+
+                                                <Form.Control type="text" placeholder="Enter Contact Number" name="contactNumber" value={formData.contactNumber} onChange={handleInputChange} />
                                             </Form.Group>
 
                                             <Form.Group
@@ -113,13 +136,10 @@ const Signup = () => {
                                                 controlId="formBasicPassword"
                                             >
                                                 <Form.Label>Password</Form.Label>
-                                                {formErrors.hasError && formErrors.password !== "" && (
-                                                    <Form.Text className="text-danger">
-                                                        {formErrors.password}
-                                                    </Form.Text>
-                                                )}
-                                                <Form.Control type="password" placeholder="Password" name='password' value={formData.password} onChange={handleInputChange} />
+
+                                                <Form.Control type="password" required placeholder="Password" name='password' value={formData.password} onChange={handleInputChange} />
                                             </Form.Group>
+
                                             <Form.Group
                                                 className="mb-3"
                                                 controlId="formBasicPasswordConfirm"
@@ -138,7 +158,12 @@ const Signup = () => {
                                             >
                                             </Form.Group>
                                             <div className="d-grid">
-                                                {loader && <>loading...</>}
+                                                {loader && <div>loading...</div>}
+                                                {formErrors.hasError && formErrors.customError !== "" && (
+                                                    <Form.Text className="text-danger">
+                                                        {formErrors.customError}
+                                                    </Form.Text>
+                                                )}
 
                                                 <Button variant="primary" onClick={handleSubmit} >
                                                     Create Account
