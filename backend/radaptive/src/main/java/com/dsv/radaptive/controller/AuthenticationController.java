@@ -1,5 +1,6 @@
 package com.dsv.radaptive.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import com.dsv.radaptive.dto.response.RegisterResponse;
 import com.dsv.radaptive.service.AuthenticationService;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
