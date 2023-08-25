@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,6 +22,8 @@ const Login = () => {
     const [formData, setFormData] = React.useState(initialState.form);
     const [formErrors, setFormErrors] = React.useState(initialState.errors);
     const [loader, setLoader] = React.useState(false);
+
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -62,6 +64,7 @@ const Login = () => {
                             progress: undefined,
                             theme: "colored",
                         });
+                        navigate("/add/candidate")
                     } else {
                         setFormErrors((prev) => {
                             return { ...prev, hasError: true, customError: "Invalid username or password" };

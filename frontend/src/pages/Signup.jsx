@@ -102,11 +102,30 @@ const Signup = () => {
                             theme: "colored",
                             });
                     } else {
-                        alert("Successfully signed up")
+                        toast.success("Successfully signed up", {
+                            position: "bottom-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
                         navigate("/login")
                     }
                 }).catch((err) => {
                     console.log(err);
+                    toast.error(err, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        });
                 }).finally(() => {
                     setLoader(false);
                 })
