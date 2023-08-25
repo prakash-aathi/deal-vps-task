@@ -2,6 +2,9 @@ import React from 'react'
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Loader from '../components/Loader';
 
 const Login = () => {
     const initialState = {
@@ -27,7 +30,6 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setLoader(true);
         setFormErrors(initialState.errors);
         let anyError = false;
         if (formData.username === "") {
@@ -43,25 +45,54 @@ const Login = () => {
             anyError = true;
         }
         if (!anyError) {
+            setLoader(true);
             console.log(formData);
-            axios.get(`http://localhost:8080/login?username=${formData.username}&password=${formData.password}`)
-                .then(res => {
+            axios.post("http://localhost:8080/login",formData)
+                .then((res) => {
                     console.log(res.data);
                     if (res.data.success === "true") {
                         localStorage.setItem("token", res.data.authenticationtoken);
-                        alert("Successfully logged in")
+                        toast.success("Successfully logged in", {
+                            position: "bottom-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
                     } else {
                         setFormErrors((prev) => {
                             return { ...prev, hasError: true, customError: "Invalid username or password" };
                         });
-                        alert("Invalid username or password")
+                        toast.error("Invalid username or password", {
+                            position: "bottom-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                            });
                     }
                 }).catch(err => {
                     console.log(err);
-                    alert("Something went wrong")
+                    toast.error("Something went Wrong try again", {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                        });
+                }).finally(() => {
+                    setLoader(false);
                 })
         }
-        setLoader(false);
     }
 
     return (
@@ -108,7 +139,7 @@ const Login = () => {
                                             >
                                             </Form.Group>
                                             <div className="d-grid">
-                                                {loader && <div>loading...</div>}
+                                                {loader && <Loader /> }
                                                 {formErrors.hasError && formErrors.customError !== "" && (
                                                     <Form.Text className="text-danger">
                                                         {formErrors.customError}

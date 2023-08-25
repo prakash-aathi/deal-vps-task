@@ -2,7 +2,9 @@ import React from 'react'
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Loader from '../components/Loader';
 
 const Signup = () => {
 
@@ -13,23 +15,24 @@ const Signup = () => {
             altEmail: "",
             firstName: "",
             lastName: "",
-            commonName: "",
             contactNumber: "",
             password: "",
             confirmPassword: "",
-            roles: ["ROLE_USER"],
-            groups: ["RAD"]
         }, errors: {
             hasError: false,
             confirmPassword: "",
             customError: "",
+            name: "",
+            email: "",
+            password: "",
+            Fname: ""
         }
     }
 
     const [formData, setFormData] = React.useState(initialState.form);
     const [formErrors, setFormErrors] = React.useState(initialState.errors);
     const [loader, setLoader] = React.useState(false);
-    
+
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
@@ -39,19 +42,46 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setLoader(true);
         setFormErrors(initialState.errors);
         let anyError = false;
+        if (formData.accountId === "") {
+            setFormErrors((prev) => {
+                return { ...prev, hasError: true, name: "   UserName is required" };
+            });
+            anyError = true;
+        }
+        if (formData.email === "") {
+            setFormErrors((prev) => {
+                return { ...prev, hasError: true, email: "   Email is required" };
+            });
+            anyError = true;
+        }
+        if (formData.firstName === "") {
+            setFormErrors((prev) => {
+                return { ...prev, hasError: true, Fname: "   First name is required" };
+            });
+            anyError = true;
+        }
+        if (formData.password === "") {
+            setFormErrors((prev) => {
+                return { ...prev, hasError: true, password: "   Password is required" };
+            });
+            anyError = true;
+        }
+        if (formData.confirmPassword === "") {
+            setFormErrors((prev) => {
+                return { ...prev, hasError: true, confirmPassword: "   Confirm Password is required" };
+            });
+            anyError = true;
+        }
         if (formData.password !== formData.confirmPassword) {
             setFormErrors((prev) => {
                 return { ...prev, hasError: true, confirmPassword: "   Password and Confirm Password must be same" };
             });
             anyError = true;
         }
-        setFormData((prev) => {
-            return { ...prev, commonName: formData.firstName + " " + formData.lastName };
-        });
         if (!anyError) {
+            setLoader(true);
             console.log(formData);
 
             axios.post("http://localhost:8080/register", formData)
@@ -61,16 +91,27 @@ const Signup = () => {
                         setFormErrors((prev) => {
                             return { ...prev, hasError: true, customError: data.message };
                         });
+                        toast.error(data.message, {
+                            position: "bottom-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                            });
                     } else {
                         alert("Successfully signed up")
                         navigate("/login")
                     }
                 }).catch((err) => {
                     console.log(err);
+                }).finally(() => {
+                    setLoader(false);
                 })
 
         }
-        setLoader(false);
     }
 
     return (
@@ -82,13 +123,19 @@ const Signup = () => {
                         <Card className="shadow px-4">
                             <Card.Body>
                                 <div className="mb-3 mt-md-4">
-                                    <h2 className="fw-bold mb-2 text-center text-uppercase ">Web app Name</h2>
+                                    <h2 className="fw-bold mb-2 text-center text-uppercase ">Web app Logo</h2>
                                     <div className="mb-3">
                                         <Form>
                                             <Form.Group className="mb-3" controlId="Name">
                                                 <Form.Label className="text-center">
                                                     User Name
                                                 </Form.Label>
+
+                                                {formErrors.hasError && formErrors.name !== "" && (
+                                                    <Form.Text className="text-danger">
+                                                        {formErrors.name}
+                                                    </Form.Text>
+                                                )}
 
                                                 <Form.Control type="text" required placeholder="Enter Unique user name" name="accountId" value={formData.accountId} onChange={handleInputChange} />
                                             </Form.Group>
@@ -97,6 +144,11 @@ const Signup = () => {
                                                 <Form.Label className="text-center">
                                                     Email address
                                                 </Form.Label>
+                                                {formErrors.hasError && formErrors.email !== "" && (
+                                                    <Form.Text className="text-danger">
+                                                        {formErrors.email}
+                                                    </Form.Text>
+                                                )}
                                                 <Form.Control type="email" required placeholder="Enter email" name="email" value={formData.email} onChange={handleInputChange} />
                                             </Form.Group>
 
@@ -111,6 +163,12 @@ const Signup = () => {
                                                 <Form.Label className="text-center">
                                                     First Name
                                                 </Form.Label>
+
+                                                {formErrors.hasError && formErrors.Fname !== "" && (
+                                                    <Form.Text className="text-danger">
+                                                        {formErrors.Fname}
+                                                    </Form.Text>
+                                                )}
 
                                                 <Form.Control type="text" placeholder="Enter First name" name="firstName" value={formData.firstName} onChange={handleInputChange} />
                                             </Form.Group>
@@ -131,11 +189,15 @@ const Signup = () => {
                                                 <Form.Control type="text" placeholder="Enter Contact Number" name="contactNumber" value={formData.contactNumber} onChange={handleInputChange} />
                                             </Form.Group>
 
-                                            <Form.Group
-                                                className="mb-3"
-                                                controlId="formBasicPassword"
-                                            >
+                                            <Form.Group className="mb-3" controlId="formBasicPassword">
+
                                                 <Form.Label>Password</Form.Label>
+
+                                                {formErrors.hasError && formErrors.password !== "" && (
+                                                    <Form.Text className="text-danger">
+                                                        {formErrors.password}
+                                                    </Form.Text>
+                                                )}
 
                                                 <Form.Control type="password" required placeholder="Password" name='password' value={formData.password} onChange={handleInputChange} />
                                             </Form.Group>
@@ -158,7 +220,7 @@ const Signup = () => {
                                             >
                                             </Form.Group>
                                             <div className="d-grid">
-                                                {loader && <div>loading...</div>}
+                                                {loader && <Loader/>}
                                                 {formErrors.hasError && formErrors.customError !== "" && (
                                                     <Form.Text className="text-danger">
                                                         {formErrors.customError}
