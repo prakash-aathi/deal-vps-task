@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dsv.radaptive.dto.request.LoginRequest;
 import com.dsv.radaptive.dto.request.RegisterRequest;
 import com.dsv.radaptive.dto.response.UserResponse;
 import com.dsv.radaptive.dto.response.LoginResponse;
@@ -30,11 +31,9 @@ public class AuthenticationController {
         return authenticationService.register(registerRequest);
     }
 
-    @GetMapping("/login")
-    public LoginResponse login(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-        return authenticationService.login(username, password);
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest loginRequest) {
+        return authenticationService.login(loginRequest.getUsername(), loginRequest.getPassword());
     }
 
     @GetMapping("/profile")

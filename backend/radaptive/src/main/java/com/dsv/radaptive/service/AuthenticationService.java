@@ -62,3 +62,7 @@ public class AuthenticationService {
     }
 
 }
+
+// byte[] encodedBytes = Base64.getEncoder().encode((adminUserName + ":" + adminPassword).getBytes());
+
+// 		String authHeader = "Basic " + new String(encodedBytes);
