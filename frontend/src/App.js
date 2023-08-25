@@ -8,6 +8,9 @@ import {
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AddCandidate from "./pages/AddCandidate";
+import ViewCandidates from "./pages/ViewCandidates";
+import AuthGuard from "./components/AuthGuard";
 
 
 function App() {
@@ -17,6 +20,8 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<Signup/>} />
+        <Route path="/add/candidate" element={<AuthGuard><AddCandidate/></AuthGuard>} />
+        <Route path="/view/candidates" element={<AuthGuard><ViewCandidates/></AuthGuard>} />
       </Routes>
     </Router>
   );
