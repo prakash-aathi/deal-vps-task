@@ -10,16 +10,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dsv.radaptive.dto.request.LoginRequest;
 import com.dsv.radaptive.dto.request.RegisterRequest;
-import com.dsv.radaptive.dto.response.UserResponse;
 import com.dsv.radaptive.dto.response.LoginResponse;
 import com.dsv.radaptive.dto.response.RegisterResponse;
+import com.dsv.radaptive.dto.response.UserResponse;
 import com.dsv.radaptive.service.AuthenticationService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@Slf4j
 public class AuthenticationController {
 
-    AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
@@ -27,7 +30,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest registerRequest) {
-        System.out.println("registerRequest: " + registerRequest);
+        log.info("registerRequest: " + registerRequest);
         return authenticationService.register(registerRequest);
     }
 
