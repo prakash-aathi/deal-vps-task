@@ -1,6 +1,7 @@
 package com.dsv.radaptive.service;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -30,6 +31,14 @@ public class CandidateService {
                 .toUri();
 
         return ResponseEntity.created(loaction).body(response);
+    }
+
+    public ResponseEntity<List<CandidateModel>> getCandidate() {
+        return ResponseEntity.ok(candidateRepo.findAll());
+    }
+
+    public ResponseEntity<CandidateModel> getCandidateById(Long id) {
+        return ResponseEntity.ok(candidateRepo.findById(id).get());
     }
 
     
