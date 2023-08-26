@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AddCandidate from "./pages/AddCandidate";
 import ViewCandidates from "./pages/ViewCandidates";
 import AuthGuard from "./components/AuthGuard";
+import CandidateDetails from "./pages/CandidateDetails";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup" element={<Signup/>} />
         <Route path="/add/candidate" element={<AuthGuard><AddCandidate/></AuthGuard>} />
         <Route path="/view/candidates" element={<AuthGuard><ViewCandidates/></AuthGuard>} />
+        <Route path="/view/candidate/:id" element={<AuthGuard><CandidateDetails/></AuthGuard>} />
       </Routes>
     </Router>
   );

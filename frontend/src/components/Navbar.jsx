@@ -17,7 +17,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="bg-blue-500 p-4">
+        <nav className="bg-blue-500 p-4 ">
             <div className=" items-center justify-between">
                 {/* <div className="text-white font-semibold text-xl">MENU</div> */}
                 <button

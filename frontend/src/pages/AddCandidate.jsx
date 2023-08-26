@@ -269,17 +269,7 @@ const AddCandidate = () => {
                                 placeholder="Enter home Location City"
                             />
                         </div>
-                        <div>
-                            <label className="block text-md font-medium text-gray-700"> Country</label>
-                            <input
-                                type="text"
-                                name="homeLocationCity"
-                                value={formData.homeLocationCity}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                                placeholder="Enter Country"
-                            />
-                        </div>
+                       
                         <div>
                             <label className="block text-md font-medium text-gray-700"> State</label>
                             <input
