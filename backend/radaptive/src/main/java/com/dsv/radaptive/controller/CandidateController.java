@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +46,11 @@ public class CandidateController {
     @GetMapping("/{id}")
     public ResponseEntity<CandidateModel> getCandidateById(@PathVariable Long id) {
         return candidateService.getCandidateById(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CandidateModel> updateCandidate(@PathVariable Long id, @Valid @RequestBody CandidateModel candidateModel) {
+        return candidateService.updateCandidate(id, candidateModel);
     }
     
 
