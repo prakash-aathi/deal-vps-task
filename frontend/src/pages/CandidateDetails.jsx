@@ -17,7 +17,7 @@ const CandidateDetails = () => {
             }).catch((err) => {
                 console.log(err);
             })
-    }, [])
+    }, [id])
 
 
     return (

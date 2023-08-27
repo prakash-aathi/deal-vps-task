@@ -12,6 +12,7 @@ import AddCandidate from "./pages/AddCandidate";
 import ViewCandidates from "./pages/ViewCandidates";
 import AuthGuard from "./components/AuthGuard";
 import CandidateDetails from "./pages/CandidateDetails";
+import EditCandidate from "./pages/EditCandidate";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/add/candidate" element={<AuthGuard><AddCandidate/></AuthGuard>} />
         <Route path="/view/candidates" element={<AuthGuard><ViewCandidates/></AuthGuard>} />
         <Route path="/view/candidate/:id" element={<AuthGuard><CandidateDetails/></AuthGuard>} />
+        <Route path="/edit/candidate/:id" element={<AuthGuard><EditCandidate/></AuthGuard>} />
       </Routes>
     </Router>
   );

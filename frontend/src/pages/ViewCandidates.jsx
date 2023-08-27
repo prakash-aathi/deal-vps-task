@@ -81,7 +81,9 @@ const ViewCandidates = () => {
                                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 
                                                         <Link id="viewCandidate" to={`/view/candidate/${item.id}`} 
-                                                            className={'hover:text-blue-700 text-blue-400 cursor-pointer'} >View</Link>
+                                                            className={'hover:text-blue-700 text-blue-400 cursor-pointer mr-4'} >View</Link>
+                                                        <Link id="editCandidate" to={`/edit/candidate/${item.id}`} 
+                                                            className={'hover:text-blue-700 text-blue-400 cursor-pointer'} >edit</Link>
                                                     </td>
                                                 </tr>
                                             ))}
