@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dsv.radaptive.dto.response.CandidateResponse;
 import com.dsv.radaptive.model.CandidateModel;
 import com.dsv.radaptive.service.CandidateService;
 
@@ -38,7 +39,7 @@ public class CandidateController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CandidateModel>> getCandidate() {
+    public ResponseEntity<List<CandidateResponse>> getCandidate() {
         return candidateService.getCandidate();
     }
 

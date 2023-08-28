@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.dsv.radaptive.dto.response.CandidateResponse;
 import com.dsv.radaptive.exception.CandidateNotFoundException;
 import com.dsv.radaptive.model.CandidateModel;
 import com.dsv.radaptive.repository.CandidateRepo;
@@ -35,8 +36,22 @@ public class CandidateService {
         return ResponseEntity.created(loaction).body(response);
     }
 
-    public ResponseEntity<List<CandidateModel>> getCandidate() {
-        return ResponseEntity.ok(candidateRepo.findAll());
+    public ResponseEntity<List<CandidateResponse>> getCandidate() {
+        List<CandidateModel> candidateModels = candidateRepo.findAll();
+        List<CandidateResponse> candidateResponse = candidateModels.stream()
+                .map(candidate -> maptoDto(candidate))
+                .toList();
+        return ResponseEntity.ok(candidateResponse);
+    }
+
+    public CandidateResponse maptoDto(CandidateModel candidateModel) {
+        return CandidateResponse.builder()
+                .id(candidateModel.getId())
+                .dob(candidateModel.getDob())
+                .email(candidateModel.getEmail())
+                .firstName(candidateModel.getFirstName())
+                .title(candidateModel.getTitle())
+                .build();
     }
 
     public ResponseEntity<CandidateModel> getCandidateById(Long id) {

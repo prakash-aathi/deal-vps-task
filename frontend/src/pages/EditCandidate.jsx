@@ -56,7 +56,7 @@ const EditCandidate = () => {
         axios.post("http://localhost:8080/candidate", formData)
             .then(res => {
                 console.log(res);
-                toast.success("Successfully Added details", {
+                toast.success("Successfully Edited details", {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
